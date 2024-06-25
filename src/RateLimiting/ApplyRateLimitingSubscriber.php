@@ -52,7 +52,8 @@ readonly class ApplyRateLimitingSubscriber implements EventSubscriberInterface
 
         if (false === $limit->isAccepted()) {
             throw new TooManyRequestsHttpException(
-                $limit->getRetryAfter()->format(\DateTimeInterface::RFC7231)
+                $limit->getRetryAfter()->format(\DateTimeInterface::RFC7231),
+                'Too many requests'
             );
         }
     }
