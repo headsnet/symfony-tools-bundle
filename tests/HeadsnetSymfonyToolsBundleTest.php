@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Headsnet\AcmeToolsBundle\Tests;
+namespace Headsnet\SymfonyToolsBundle\Tests;
 
-use Headsnet\AcmeToolsBundle\HeadsnetAcmeToolsBundle;
+use Headsnet\SymfonyToolsBundle\HeadsnetSymfonyToolsBundle;
 use Nyholm\BundleTest\TestKernel;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-#[CoversClass(HeadsnetAcmeToolsBundle::class)]
-class HeadsnetAcmeToolsBundleTest extends KernelTestCase
+#[CoversClass(HeadsnetSymfonyToolsBundle::class)]
+class HeadsnetSymfonyToolsBundleTest extends KernelTestCase
 {
     protected static function getKernelClass(): string
     {
@@ -25,7 +25,7 @@ class HeadsnetAcmeToolsBundleTest extends KernelTestCase
     {
         /** @var TestKernel $kernel $kernel */
         $kernel = parent::createKernel($options);
-        $kernel->addTestBundle(HeadsnetAcmeToolsBundle::class);
+        $kernel->addTestBundle(HeadsnetSymfonyToolsBundle::class);
         $kernel->addTestConfig(__DIR__ . '/Fixtures/config.yaml');
         $kernel->handleOptions($options);
 
@@ -39,7 +39,11 @@ class HeadsnetAcmeToolsBundleTest extends KernelTestCase
         $container = $kernel->getContainer();
 
         $this->assertTrue(
-            $container->hasParameter('headsnet_acme_tools.root_namespace')
+            $container->hasParameter('headsnet_symfony_tools.root_namespace')
+        );
+
+        $this->assertTrue(
+            $container->hasParameter('headsnet_symfony_tools.rate_limiting.use_headers')
         );
     }
 }

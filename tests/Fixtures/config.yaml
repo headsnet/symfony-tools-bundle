@@ -1,3 +1,5 @@
-headsnet_acme_tools:
+headsnet_symfony_tools:
   root_namespace: App
+  rate_limiting:
+    use_headers: true
 

@@ -11,5 +11,5 @@ return function (ContainerConfigurator $configurator): void
         ->autoconfigure()
     ;
 
-    $services->load('Headsnet\\AcmeToolsBundle\\', '../src/*');
+    $services->load('Headsnet\\SymfonyToolsBundle\\', '../src/*');
 };
