@@ -45,7 +45,12 @@ class RateLimitingCompilerPass implements CompilerPassInterface
                         throw new \RuntimeException(sprintf('Service %s not found', $serviceKey));
                     }
 
-                    $classMapKey = sprintf('%s::%s', $serviceDefinition->getClass(), $reflectionMethod->getName());
+                    if ($reflectionMethod->getName() === '__invoke') {
+                        $classMapKey = $serviceDefinition->getClass();
+                    } else {
+                        $classMapKey = sprintf('%s::%s', $serviceDefinition->getClass(), $reflectionMethod->getName());
+                    }
+
                     $rateLimiterClassMap[$classMapKey] = $container->getDefinition($serviceKey);
                 }
             }

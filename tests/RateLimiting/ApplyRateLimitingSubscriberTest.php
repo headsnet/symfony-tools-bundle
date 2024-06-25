@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Headsnet\SymfonyToolsBundle\Tests\RateLimiting;
 
 use Headsnet\SymfonyToolsBundle\RateLimiting\ApplyRateLimitingSubscriber;
-use Headsnet\SymfonyToolsBundle\Tests\RateLimiting\Fixtures\FakeController;
+use Headsnet\SymfonyToolsBundle\Tests\RateLimiting\Fixtures\FakeInvokableController;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -110,7 +110,7 @@ class ApplyRateLimitingSubscriberTest extends TestCase
     private function createControllerEvent(): array
     {
         $request = new Request();
-        $request->attributes->set('_controller', FakeController::class . '::__invoke');
+        $request->attributes->set('_controller', FakeInvokableController::class . '::__invoke');
         $event = new ControllerEvent(
             $this->createMock(HttpKernelInterface::class),
             function () {},
@@ -139,7 +139,7 @@ class ApplyRateLimitingSubscriberTest extends TestCase
         );
 
         return [
-            FakeController::class . '::__invoke' => $limiter,
+            FakeInvokableController::class . '::__invoke' => $limiter,
         ];
     }
 }
