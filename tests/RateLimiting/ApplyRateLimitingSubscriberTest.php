@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\RateLimiter\RateLimit;
@@ -19,6 +20,8 @@ use Symfony\Component\RateLimiter\Storage\InMemoryStorage;
 #[CoversClass(ApplyRateLimitingSubscriber::class)]
 class ApplyRateLimitingSubscriberTest extends TestCase
 {
+    private const MAX_PER_PERIOD = 2;
+
     #[Test]
     public function get_subscribed_events_returns_correct_event_and_priority(): void
     {
@@ -88,6 +91,19 @@ class ApplyRateLimitingSubscriberTest extends TestCase
         $this->assertTrue($rateLimit->isAccepted());
     }
 
+    #[Test]
+    public function ensure_http_429_is_returned_after_too_many_requests(): void
+    {
+        [, $event] = $this->createControllerEvent();
+        $sut = new ApplyRateLimitingSubscriber($this->getRateLimiterClassMap());
+
+        $this->expectException(TooManyRequestsHttpException::class);
+
+        for ($i = 0; $i <= self::MAX_PER_PERIOD; $i++) {
+            $sut->onKernelController($event);
+        }
+    }
+
     /**
      * @return array{Request, ControllerEvent}
      */
@@ -114,9 +130,9 @@ class ApplyRateLimitingSubscriberTest extends TestCase
             [
                 'id' => 'test',
                 'policy' => 'token_bucket',
-                'limit' => 10,
+                'limit' => self::MAX_PER_PERIOD,
                 'rate' => [
-                    'interval' => '1 minute',
+                    'interval' => '10 seconds',
                 ],
             ],
             new InMemoryStorage()

@@ -6,6 +6,7 @@ namespace Headsnet\SymfonyToolsBundle\RateLimiting;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 
@@ -48,6 +49,11 @@ readonly class ApplyRateLimitingSubscriber implements EventSubscriberInterface
         $limiterKey = sprintf('rate_limit_ip_%s', $request->getClientIp());
         $limit = $rateLimiter->create($limiterKey)->consume();
         $request->attributes->set('rate_limit', $limit);
-        $limit->ensureAccepted();
+
+        if (false === $limit->isAccepted()) {
+            throw new TooManyRequestsHttpException(
+                $limit->getRetryAfter()->format(\DateTimeInterface::RFC7231)
+            );
+        }
     }
 }
