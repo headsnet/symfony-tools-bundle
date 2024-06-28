@@ -1,8 +1,7 @@
 headsnet_symfony_tools:
     root_namespace: App
     forms:
-      default_empty_string:
-        enabled: true
+      default_empty_string: true
       disable_validation: true
       disable_autocomplete: true
     rate_limiting:

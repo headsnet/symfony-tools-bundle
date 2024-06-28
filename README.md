@@ -97,8 +97,7 @@ This is an opinionated solution, so must be enabled in the bundle configuration:
 ```yaml
 headsnet_symfony_tools:
   forms:
-    default_empty_string:
-      enabled: true
+    default_empty_string: true
 ```
 
 ## License
