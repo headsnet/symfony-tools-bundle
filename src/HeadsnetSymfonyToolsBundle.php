@@ -25,9 +25,7 @@ class HeadsnetSymfonyToolsBundle extends AbstractBundle
             ->arrayNode('forms')
                 ->addDefaultsIfNotSet()
                 ->children()
-                    ->arrayNode('default_empty_string')
-                        ->canBeEnabled()
-                    ->end() // End default_empty_string
+                    ->booleanNode('default_empty_string')->defaultFalse()->end()
                     ->booleanNode('disable_autocomplete')->defaultFalse()->end()
                     ->booleanNode('disable_validation')->defaultFalse()->end()
                 ->end()
@@ -40,9 +38,7 @@ class HeadsnetSymfonyToolsBundle extends AbstractBundle
      * @param array{
      *     root_namespace: string,
      *     forms: array{
-     *         default_empty_string: array{
-     *             enabled: bool
-     *         },
+     *         default_empty_string: bool,
      *         disable_autocomplete: bool,
      *         disable_validation: bool,
      *     },
@@ -58,7 +54,7 @@ class HeadsnetSymfonyToolsBundle extends AbstractBundle
             ->set('headsnet_symfony_tools.rate_limiting.use_headers', $config['rate_limiting']['use_headers'])
         ;
 
-        if ($config['forms']['default_empty_string']['enabled']) {
+        if ($config['forms']['default_empty_string']) {
             $container->services()
                 ->set('headsnet_symfony_tools.forms.default_empty_string_extension')
                 ->class(TextTypeDefaultStringExtension::class)

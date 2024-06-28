@@ -27,10 +27,11 @@ return [
 
 ## Features
 
-- [Rate Limiter Attributes](#rate-limiter-attributes)
-- [Form Text Fields Empty String](#form-text-fields-empty-string)
+- [Apply rate limiters using attributes](#apply-rate-limiters-using-attributes)
+- [Use empty strings by default on text-based form fields](#empty-string-default-for-text-based-form-fields)
+- [Set various attributes on &lt;form&gt; elements](#set-attributes-on-form-elements)
 
-### Rate Limiter Attributes
+### Apply rate limiters using attributes
 
 The bundle provides PHP attributes that can be used to apply the Symfony Rate Limiter component.
 
@@ -83,7 +84,7 @@ headsnet_symfony_tools:
 
 Thanks to [this JoliCode article](https://jolicode.com/blog/rate-limit-your-symfony-apis) for the inspiration!
 
-### Form Text Fields Empty String
+### Empty string default for text-based form fields
 
 By default Symfony uses `null` as the default value for text-based form fields. This results in `null` values being all 
 over the codebase. 
@@ -97,8 +98,20 @@ This is an opinionated solution, so must be enabled in the bundle configuration:
 ```yaml
 headsnet_symfony_tools:
   forms:
-    default_empty_string:
-      enabled: true
+    default_empty_string: true
+```
+
+### Set attributes on &lt;form&gt; elements
+
+The bundle provides an easy way to globally set attributes on `<form>` elements.
+
+These must be explicitly enabled in the configuration.
+
+```yaml
+headsnet_symfony_tools:
+  forms:
+    disable_autocomplete: true  # autocomplete="off"
+    disable_validation: true    # novalidate="novalidate"
 ```
 
 ## License
