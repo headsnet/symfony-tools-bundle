@@ -2,6 +2,7 @@
 
 namespace Headsnet\SymfonyToolsBundle;
 
+use Headsnet\SymfonyToolsBundle\Form\Extension\FormAttributesExtension;
 use Headsnet\SymfonyToolsBundle\Form\Extension\TextTypeDefaultStringExtension;
 use Headsnet\SymfonyToolsBundle\RateLimiting\RateLimitingCompilerPass;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
@@ -27,6 +28,8 @@ class HeadsnetSymfonyToolsBundle extends AbstractBundle
                     ->arrayNode('default_empty_string')
                         ->canBeEnabled()
                     ->end() // End default_empty_string
+                    ->booleanNode('disable_autocomplete')->defaultFalse()->end()
+                    ->booleanNode('disable_validation')->defaultFalse()->end()
                 ->end()
             ->end() // End forms
             ->end()
@@ -39,7 +42,9 @@ class HeadsnetSymfonyToolsBundle extends AbstractBundle
      *     forms: array{
      *         default_empty_string: array{
      *             enabled: bool
-     *         }
+     *         },
+     *         disable_autocomplete: bool,
+     *         disable_validation: bool,
      *     },
      *     rate_limiting: array{use_headers: bool}
      * } $config
@@ -58,6 +63,17 @@ class HeadsnetSymfonyToolsBundle extends AbstractBundle
                 ->set('headsnet_symfony_tools.forms.default_empty_string_extension')
                 ->class(TextTypeDefaultStringExtension::class)
                 ->tag('form.type_extension')
+                ->public()
+            ;
+        }
+
+        if ($config['forms']['disable_validation'] || $config['forms']['disable_autocomplete']) {
+            $container->services()
+                ->set('headsnet_symfony_tools.forms.form_attributes_extension')
+                ->class(FormAttributesExtension::class)
+                ->tag('form.type_extension')
+                ->arg('$disableAutoComplete', $config['forms']['disable_autocomplete'])
+                ->arg('$disableValidation', $config['forms']['disable_validation'])
                 ->public()
             ;
         }

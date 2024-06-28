@@ -3,6 +3,8 @@ headsnet_symfony_tools:
     forms:
       default_empty_string:
         enabled: true
+      disable_validation: true
+      disable_autocomplete: true
     rate_limiting:
         use_headers: true
 
