@@ -17,7 +17,8 @@ test: ## Run PHPUnit tests
 	@${PHPUNIT}
 
 test-coverage: ## Run PHPUnit tests with code coverage
-	@${PHPUNIT} --coverage-html=var/coverage
+	-@${PHPUNIT} --coverage-html=var/coverage --coverage-text=var/coverage/coverage.txt
+	@head var/coverage/coverage.txt
 
 ########################################################################################################################
 # https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
