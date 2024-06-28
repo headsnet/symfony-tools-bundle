@@ -10,6 +10,13 @@ Symfony Bundle Template
 
 A collection of useful tools and functions for Symfony projects. 
 
+## Features
+
+- [Apply rate limiters using attributes](#apply-rate-limiters-using-attributes)
+- [Store Twig templates next to production code](#store-twig-templates-next-to-production-code)
+- [Use empty strings by default on text-based form fields](#empty-string-default-for-text-based-form-fields)
+- [Set various attributes on &lt;form&gt; elements](#set-attributes-on-form-elements)
+
 ## Installation
 
 ```bash
@@ -24,13 +31,6 @@ return [
     Headsnet\DoctrineToolsBundle\HeadsnetSymfonyToolsBundle::class => ['all' => true],
 ];
 ```
-
-## Features
-
-- [Apply rate limiters using attributes](#apply-rate-limiters-using-attributes)
-- [Store Twig templates next to production code](#store-twig-templates-next-to-production-code)
-- [Use empty strings by default on text-based form fields](#empty-string-default-for-text-based-form-fields)
-- [Set various attributes on &lt;form&gt; elements](#set-attributes-on-form-elements)
 
 ### Apply rate limiters using attributes
 
@@ -93,15 +93,13 @@ related things together (cohesion). You may want to apply to this your Twig temp
 This bundle provides a compiler pass that will search for multiple Twig `tpl` directories and add them to the Twig 
 configuration automatically.
 
-This behaviour must be enabled in the configuration:
+This behaviour must be enabled in the configuration by setting the `base_dir` option:
 
 ```yaml
 headsnet_symfony_tools:
     twig:
         import_feature_dirs:
-            base_dir: 'src/'
-            separator: '->'
-            tpl_dir_name: tpl
+            base_dir: 'src/Feature'
 ```
 You can then refer to your Twig templates that live in your production code directories using the following syntax:
 
