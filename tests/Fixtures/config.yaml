@@ -1,5 +1,8 @@
 headsnet_symfony_tools:
-  root_namespace: App
-  rate_limiting:
-    use_headers: true
+    root_namespace: App
+    forms:
+      default_empty_string:
+        enabled: true
+    rate_limiting:
+        use_headers: true
 

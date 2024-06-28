@@ -28,6 +28,7 @@ return [
 ## Features
 
 - [Rate Limiter Attributes](#rate-limiter-attributes)
+- [Form Text Fields Empty String](#form-text-fields-empty-string)
 
 ### Rate Limiter Attributes
 
@@ -81,6 +82,24 @@ headsnet_symfony_tools:
 ```
 
 Thanks to [this JoliCode article](https://jolicode.com/blog/rate-limit-your-symfony-apis) for the inspiration!
+
+### Form Text Fields Empty String
+
+By default Symfony uses `null` as the default value for text-based form fields. This results in `null` values being all 
+over the codebase. 
+
+An easy way to fix this is to change the default behaviour so text-based fields return an empty string 
+`''` instead of `null`. Then, class properties can be typed `string` instead of `string|null` and this 
+can eliminate a lot of null checks in the client code.
+
+This is an opinionated solution, so must be enabled in the bundle configuration:
+
+```yaml
+headsnet_symfony_tools:
+  forms:
+    default_empty_string:
+      enabled: true
+```
 
 ## License
 

@@ -2,6 +2,7 @@
 
 namespace Headsnet\SymfonyToolsBundle;
 
+use Headsnet\SymfonyToolsBundle\Form\Extension\TextTypeDefaultStringExtension;
 use Headsnet\SymfonyToolsBundle\RateLimiting\RateLimitingCompilerPass;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -20,6 +21,14 @@ class HeadsnetSymfonyToolsBundle extends AbstractBundle
                         ->booleanNode('use_headers')->end()
                     ->end()
                 ->end() // End rate_limiting
+            ->arrayNode('forms')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->arrayNode('default_empty_string')
+                        ->canBeEnabled()
+                    ->end() // End default_empty_string
+                ->end()
+            ->end() // End forms
             ->end()
         ;
     }
@@ -27,6 +36,11 @@ class HeadsnetSymfonyToolsBundle extends AbstractBundle
     /**
      * @param array{
      *     root_namespace: string,
+     *     forms: array{
+     *         default_empty_string: array{
+     *             enabled: bool
+     *         }
+     *     },
      *     rate_limiting: array{use_headers: bool}
      * } $config
      */
@@ -38,6 +52,15 @@ class HeadsnetSymfonyToolsBundle extends AbstractBundle
             ->set('headsnet_symfony_tools.root_namespace', $config['root_namespace'])
             ->set('headsnet_symfony_tools.rate_limiting.use_headers', $config['rate_limiting']['use_headers'])
         ;
+
+        if ($config['forms']['default_empty_string']['enabled']) {
+            $container->services()
+                ->set('headsnet_symfony_tools.forms.default_empty_string_extension')
+                ->class(TextTypeDefaultStringExtension::class)
+                ->tag('form.type_extension')
+                ->public()
+            ;
+        }
     }
 
     public function build(ContainerBuilder $container): void
