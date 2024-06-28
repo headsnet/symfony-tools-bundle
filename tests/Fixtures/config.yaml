@@ -1,9 +1,14 @@
 headsnet_symfony_tools:
     root_namespace: App
     forms:
-      default_empty_string: true
-      disable_validation: true
-      disable_autocomplete: true
+        default_empty_string: true
+        disable_validation: true
+        disable_autocomplete: true
     rate_limiting:
         use_headers: true
+    twig:
+        import_feature_dirs:
+            base_dir: src/UI/Feature
+            separator: '->'
+            tpl_dir_name: tpl
 
