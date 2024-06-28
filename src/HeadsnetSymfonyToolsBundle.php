@@ -5,6 +5,7 @@ namespace Headsnet\SymfonyToolsBundle;
 use Headsnet\SymfonyToolsBundle\Form\Extension\FormAttributesExtension;
 use Headsnet\SymfonyToolsBundle\Form\Extension\TextTypeDefaultStringExtension;
 use Headsnet\SymfonyToolsBundle\RateLimiting\RateLimitingCompilerPass;
+use Headsnet\SymfonyToolsBundle\Twig\TemplateDirectoryCompilerPass;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -22,14 +23,27 @@ class HeadsnetSymfonyToolsBundle extends AbstractBundle
                         ->booleanNode('use_headers')->end()
                     ->end()
                 ->end() // End rate_limiting
-            ->arrayNode('forms')
-                ->addDefaultsIfNotSet()
-                ->children()
-                    ->booleanNode('default_empty_string')->defaultFalse()->end()
-                    ->booleanNode('disable_autocomplete')->defaultFalse()->end()
-                    ->booleanNode('disable_validation')->defaultFalse()->end()
-                ->end()
-            ->end() // End forms
+                ->arrayNode('forms')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('default_empty_string')->defaultFalse()->end()
+                        ->booleanNode('disable_autocomplete')->defaultFalse()->end()
+                        ->booleanNode('disable_validation')->defaultFalse()->end()
+                    ->end()
+                ->end() // End forms
+                ->arrayNode('twig')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('import_feature_dirs')
+                            ->canBeEnabled()
+                            ->children()
+                                ->scalarNode('base_dir')->defaultValue('')->end()
+                                ->scalarNode('separator')->defaultValue('->')->end()
+                                ->scalarNode('tpl_dir_name')->defaultValue('tpl')->end()
+                            ->end()
+                        ->end() // End import_feature_dirs
+                    ->end()
+                ->end() // End twig
             ->end()
         ;
     }
@@ -42,7 +56,16 @@ class HeadsnetSymfonyToolsBundle extends AbstractBundle
      *         disable_autocomplete: bool,
      *         disable_validation: bool,
      *     },
-     *     rate_limiting: array{use_headers: bool}
+     *     rate_limiting: array{
+     *         use_headers: bool
+     *     },
+     *     twig: array{
+     *         import_feature_dirs: array{
+     *             base_dir: string,
+     *             separator: string,
+     *             tpl_dir_name: string,
+     *         }
+     *     }
      * } $config
      */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
@@ -52,6 +75,9 @@ class HeadsnetSymfonyToolsBundle extends AbstractBundle
         $container->parameters()
             ->set('headsnet_symfony_tools.root_namespace', $config['root_namespace'])
             ->set('headsnet_symfony_tools.rate_limiting.use_headers', $config['rate_limiting']['use_headers'])
+            ->set('headsnet_symfony_tools.twig.import_feature_dirs.base_dir', $config['twig']['import_feature_dirs']['base_dir'])
+            ->set('headsnet_symfony_tools.twig.import_feature_dirs.separator', $config['twig']['import_feature_dirs']['separator'])
+            ->set('headsnet_symfony_tools.twig.import_feature_dirs.tpl_dir_name', $config['twig']['import_feature_dirs']['tpl_dir_name'])
         ;
 
         if ($config['forms']['default_empty_string']) {
@@ -81,6 +107,10 @@ class HeadsnetSymfonyToolsBundle extends AbstractBundle
 
         $container->addCompilerPass(
             new RateLimitingCompilerPass()
+        );
+
+        $container->addCompilerPass(
+            new TemplateDirectoryCompilerPass()
         );
     }
 }
