@@ -49,5 +49,9 @@ class HeadsnetSymfonyToolsBundleTest extends KernelTestCase
         $this->assertNotNull(
             $container->get('headsnet_symfony_tools.forms.default_empty_string_extension')
         );
+
+        $this->assertNotNull(
+            $container->get('headsnet_symfony_tools.forms.form_attributes_extension')
+        );
     }
 }
