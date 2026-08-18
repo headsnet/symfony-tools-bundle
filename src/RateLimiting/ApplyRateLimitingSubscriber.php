@@ -13,7 +13,9 @@ use Symfony\Component\RateLimiter\RateLimiterFactory;
 readonly class ApplyRateLimitingSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        /** @var RateLimiterFactory[] */
+        /**
+         * @var RateLimiterFactory[]
+         */
         private array $rateLimiterClassMap,
         private bool $isRateLimiterEnabled = true,
     ) {
