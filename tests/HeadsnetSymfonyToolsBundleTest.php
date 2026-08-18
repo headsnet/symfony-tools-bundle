@@ -46,12 +46,12 @@ class HeadsnetSymfonyToolsBundleTest extends KernelTestCase
             $container->hasParameter('headsnet_symfony_tools.rate_limiting.use_headers')
         );
 
-        $this->assertNotNull(
-            $container->get('headsnet_symfony_tools.forms.default_empty_string_extension')
-        );
+        /** @var object|null $emptyStringExtension */
+        $emptyStringExtension = $container->get('headsnet_symfony_tools.forms.default_empty_string_extension');
+        $this->assertNotNull($emptyStringExtension);
 
-        $this->assertNotNull(
-            $container->get('headsnet_symfony_tools.forms.form_attributes_extension')
-        );
+        /** @var object|null $formAttributesExtension */
+        $formAttributesExtension = $container->get('headsnet_symfony_tools.forms.form_attributes_extension');
+        $this->assertNotNull($formAttributesExtension);
     }
 }
